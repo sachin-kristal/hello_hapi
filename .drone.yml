@@ -1,7 +1,22 @@
-pipeline:
-  build:
-    image: node:latest
-    commands: npm install
-  test:
-    image: node:latest
-    commands: npm run test
+kind: pipeline
+type: docker
+name: Play with ssh
+
+steps:
+  - name: Promote to STAGE
+    image: appleboy/drone-ssh
+    settings:
+      host: ci.example.io
+      username: secret
+      password: secret
+      port: 22
+      script:
+        - export DRONE_SERVER=https://ci.example.io
+        - export DRONE_TOKEN=secret
+        - echo "Welcome SSH"
+        - ls -la
+        - drone info
+
+trigger:
+  branch:
+    - master
